@@ -1,9 +1,13 @@
 package com.carros.domain;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.carros.domain.dto.CarroDTO;
 
 @Service
 public class CarroService {
@@ -11,16 +15,30 @@ public class CarroService {
 	@Autowired
 	private CarroRepository repositorio;
 	
-	public Iterable<Carro> getCarros() {
-		return repositorio.findAll();
+	public List<CarroDTO> getCarros() {
+		//List<Carro> carros = repositorio.findAll();
+		
+		//List<CarroDTO> list = carros.stream().map(c -> new CarroDTO(c)).collect(Collectors.toList());
+		//return repositorio.findAll().stream().map(c -> new CarroDTO(c)).collect(Collectors.toList());
+		return repositorio.findAll().stream().map(c ->  CarroDTO.create(c)).collect(Collectors.toList());
+		
+		
+		/* List<CarroDTO> list = new ArrayList<>();
+		for (Carro c : carros) {
+			list.add(new CarroDTO(c));
+		}
+		return list; */
+		
 	}
 	
-	public Optional<Carro> getCarrosById(Long id) {
-		return repositorio.findById(id);
+	public Optional<CarroDTO> getCarroById(Long id) {
+		//return repositorio.findById(id).map(c -> new CarroDTO(c));
+		return repositorio.findById(id).map(c -> CarroDTO.create(c));
 	}
 
-	public Iterable<Carro> getCarrosByTipo(String tipo) {
-		return repositorio.findByTipo(tipo);
+	public List<CarroDTO> getCarrosByTipo(String tipo) {
+		//return repositorio.findByTipo(tipo).stream().map(c -> new CarroDTO(c)).collect(Collectors.toList());
+		return repositorio.findByTipo(tipo).stream().map(c -> CarroDTO.create(c)).collect(Collectors.toList());
 	}
 
 	public Carro insert(Carro carro) {
@@ -29,7 +47,7 @@ public class CarroService {
 
 	public Carro update(Carro carro, Long id) {
 		
-		Optional<Carro> optinal = getCarrosById(id);
+		Optional<Carro> optinal = repositorio.findById(id);
 		if(optinal.isPresent()) {
 			Carro carroDb = optinal.get();
 			carroDb.setNome(carro.getNome());
@@ -41,5 +59,11 @@ public class CarroService {
 			throw new RuntimeException("Não foi possível atualizar o registro.");
 		}
 		
+	}
+	
+	public void delete(Long id) {
+		if(getCarroById(id).isPresent()) {
+			repositorio.deleteById(id);
+		}
 	}
 }

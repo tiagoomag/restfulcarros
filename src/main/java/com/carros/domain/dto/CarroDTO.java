@@ -1,48 +1,45 @@
-package com.carros.domain;
+package com.carros.domain.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
-@Entity
-public class Carro {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+import org.modelmapper.ModelMapper;
+
+import com.carros.domain.Carro;
+
+public class CarroDTO {
 	private Long id;
-
 	private String nome;
 	private String tipo;
 	
-	public Carro() {
-
+	
+	//Convertendo Carro to CarroDTO com o ModelMapper
+	public static CarroDTO create(Carro c) {
+		ModelMapper modelMapper = new ModelMapper();
+		return modelMapper.map(c, CarroDTO.class);
 	}
+	
+	/*
+	 * public CarroDTO(Carro c) { this.id = c.getId(); this.nome = c.getNome();
+	 * this.tipo = c.getTipo(); }
+	 */
 
 	public Long getId() {
 		return id;
 	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
-
 	public String getNome() {
 		return nome;
 	}
-
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-
 	public String getTipo() {
 		return tipo;
 	}
-
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -50,7 +47,6 @@ public class Carro {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -59,7 +55,7 @@ public class Carro {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Carro other = (Carro) obj;
+		CarroDTO other = (CarroDTO) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -67,4 +63,5 @@ public class Carro {
 			return false;
 		return true;
 	}
+
 }
