@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
+import com.carros.api.exeption.ObjectNotFoundException;
 import com.carros.domain.dto.CarroDTO;
 
 @Service
@@ -31,9 +33,11 @@ public class CarroService {
 		
 	}
 	
-	public Optional<CarroDTO> getCarroById(Long id) {
+	public CarroDTO getCarroById(Long id) {
+		
+		Optional<Carro> carro = repositorio.findById(id);
 		//return repositorio.findById(id).map(c -> new CarroDTO(c));
-		return repositorio.findById(id).map(c -> CarroDTO.create(c));
+		return repositorio.findById(id).map(c -> CarroDTO.create(c)).orElseThrow(() -> new ObjectNotFoundException("Carro não encontrado."));
 	}
 
 	public List<CarroDTO> getCarrosByTipo(String tipo) {
@@ -41,11 +45,13 @@ public class CarroService {
 		return repositorio.findByTipo(tipo).stream().map(c -> CarroDTO.create(c)).collect(Collectors.toList());
 	}
 
-	public Carro insert(Carro carro) {
-		return repositorio.save(carro);
+	public CarroDTO insert(Carro carro) {
+		Assert.isNull(carro.getId(), "Não foi possível inserir o registro.");
+		
+		return CarroDTO.create(repositorio.save(carro));
 	}
 
-	public Carro update(Carro carro, Long id) {
+	public CarroDTO update(Carro carro, Long id) {
 		
 		Optional<Carro> optinal = repositorio.findById(id);
 		if(optinal.isPresent()) {
@@ -54,16 +60,16 @@ public class CarroService {
 			carroDb.setTipo(carro.getTipo());
 			System.out.println("carro id" + carroDb.getId());
 			repositorio.save(carroDb);
-			return carroDb;
+			return CarroDTO.create(carroDb);
 		} else {
-			throw new RuntimeException("Não foi possível atualizar o registro.");
+			return null;
+			//throw new RuntimeException("Não foi possível atualizar o registro.");
 		}
 		
 	}
 	
 	public void delete(Long id) {
-		if(getCarroById(id).isPresent()) {
 			repositorio.deleteById(id);
-		}
 	}
+	
 }
