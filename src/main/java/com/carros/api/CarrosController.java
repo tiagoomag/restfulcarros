@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,12 +67,11 @@ public class CarrosController {
 	}
 	
 	@PostMapping
+	@Secured({ "ROLE_ADMIN" })
 	public ResponseEntity post(@RequestBody Carro carro) {
 			CarroDTO c = service.insert(carro);
-			
 			URI location = getUri(c.getId());
 			return ResponseEntity.created(location).build();
-		
 	}
 	
 	private URI getUri(Long id) {
