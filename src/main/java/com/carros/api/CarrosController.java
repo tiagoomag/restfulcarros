@@ -2,7 +2,6 @@ package com.carros.api;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -82,7 +81,7 @@ public class CarrosController {
 	@PutMapping("/{id}")
 	public ResponseEntity put(@PathVariable("id") Long id, @RequestBody Carro carro) {
 		
-		carro.setId(id);
+		//carro.setId(id);
 		
 		CarroDTO c = service.update(carro, id);
 		
