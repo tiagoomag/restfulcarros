@@ -54,7 +54,6 @@ public class CarroService {
 			return null;
 			//throw new RuntimeException("Não foi possível atualizar o registro.");
 		}
-		
 	}
 	
 	public void delete(Long id) {
