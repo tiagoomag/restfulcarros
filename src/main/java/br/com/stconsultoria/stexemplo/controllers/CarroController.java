@@ -22,7 +22,7 @@ import br.com.stconsultoria.stexemplo.services.CarroService;
 
 @RestController
 @RequestMapping("/api/v1/carros")
-public class CarrosController {
+public class CarroController {
 	
 	@Autowired
 	private CarroService service;
@@ -59,8 +59,7 @@ public class CarrosController {
 	@GetMapping("/tipo/{tipo}")
 	public ResponseEntity getCarrosByTipo(@PathVariable("tipo") String tipo) {
 		List<CarroDTO> carros = service.getCarrosByTipo(tipo);
-		
-		//alterar lógica
+
 		return carros.isEmpty() ? 
 				ResponseEntity.noContent().build() :
 				ResponseEntity.ok(carros);
@@ -91,7 +90,7 @@ public class CarrosController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity delete(@PathVariable("id") Long id) {
-	 service.delete(id);
+		service.delete(id);
 		
 	 return ResponseEntity.ok().build();
 	}
